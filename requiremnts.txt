@@ -1,0 +1,5 @@
+aiohttp == 3.7.4.post0
+python-telegram-bot == 12.7
+requests
+dotenv
+pathlib
