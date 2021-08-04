@@ -49,7 +49,7 @@
     
 ## Authors
 
-👤 **Author1**
+👤 **Author**
 
 - GitHub: [@x0xman](https://github.com/x0xman)
 - Telegram : [@xMan](https://t.me/x0x3b)
