@@ -19,7 +19,7 @@
 
     **[Example]** `https://api.hadith.sutanlab.id/books/muslim?range=1-150`
 
-    | Parameter | Type | Description |
+    | Parameter | value e.g | Description |
     | :--- | :--- | :--- |
     | `number` | `0-300` | `Returns hadiths by range of number. (Note: For performance reasons, max accepted range: 300)` |
     | `name` | `['muslim','bukhari','tirmidzi','nasai','abu-daud','ibnu-majah','ahmad','darimi','malik']` | `Returns hadiths by range of number. (Note: For performance reasons, max accepted range: 300)` |
@@ -31,7 +31,7 @@
 
     **[Example]** `https://api.hadith.sutanlab.id/books/bukhari/52`
 
-    | Parameter | Type | Description |
+    | Parameter | value e.g | Description |
     | :--- | :--- | :--- |
     | `number` | `0-300` | `Returns hadiths by range of number. (Note: For performance reasons, max accepted range: 300)` |
     | `name` | `['muslim','bukhari','tirmidzi','nasai','abu-daud','ibnu-majah','ahmad','darimi','malik']` | `Returns spesific hadith` |
