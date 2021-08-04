@@ -3,9 +3,11 @@ import re
 import json
 import time
 import telebot
+import asyncio
 from pathlib import Path
 import schedule, threading
 from fetch import Hadith_api
+import aioschedule as schedule
 from dotenv import load_dotenv
 from exceptions import NotFoundEnvironmentVariables
 from exceptions import JSONDecodeErrorException
@@ -26,49 +28,6 @@ def Initializer_json ( object : str ) -> str :
            " Exception :: Error - For the solution ? -> https://stackoverflow.com/a/18460958/15710731 "
         )
     
-
-class schedule_textmessage_telegramApi(object):
-    def __init__(self):
-        self.tele_bot = telebot.TeleBot(get_environment_variables("TOKEN_API"))
-        self.seconds_context_hadith : int = 59 # 59  seconds | change if you want 
-        self.minutes_context_hadith : int = 60 * 30 # change if you want 
-        self.hours_context_hadith   : int = 60 * 60 # change if you want 
-        schedule.every(3).seconds.do(self.style_by_context())
-        self.start_schedule()
-    """
-    :description this function will be used schedule for hadith context 
-    :func start_schedule [self]
-    """
-    #@classmethod
-    def start_schedule(self):
-        while True:
-          schedule.run_pending()
-          time.sleep(1)
-    """
-    :description this function will be used threading
-    :func start_threading [self]
-    """
-    def start_threading(self):
-        thread = threading.Thread(target=self.start_schedule())
-        thread.start()
-
-    """
-    :description style by context to send hadith context 
-    :func style_by_context [self]
-    """
-    def style_by_context (self , HadithAPI : Hadith_api.context_hadith_api() ) -> str :
-        self.context : str = f"""{HadithAPI}"""
-        #self.tele_bot.send_message()
-        return self.context
-
-
-"""
-  :func environment_variables()
-    :description Environment variables is the set of key-value pairs for the current user environment. 
-                They are generally set by the operating system and the current user-specific configurations
-    :param variables [str] 
-"""
-
 def get_environment_variables( variables : str ) -> str :  
     env_path = Path('.') / '.env'
     load_dotenv(dotenv_path=env_path)
@@ -85,6 +44,54 @@ def get_environment_variables( variables : str ) -> str :
 
 # telebot 
 token_bot = telebot.TeleBot(get_environment_variables("TOKEN_API"))
+
+class schedule_textmessage_telegramApi:
+    def __init__(self):
+        self.bot = telebot.TeleBot(get_environment_variables("TOKEN_API"))
+        self.seconds_context_hadith : int = 59 # 59  seconds | change if you want 
+        self.minutes_context_hadith : int = 60 * 30 # change if you want 
+        self.hours_context_hadith   : int = 60 * 60 # change if you want 
+        schedule.every(1).hours.do(self.style_by_context())
+        loop = asyncio.get_event_loop()
+        while True:
+            loop.run_until_complete(schedule.run_pending())
+            time.sleep(0.1)
+    """
+     :func telebot_python [self] connection to TelegramAPI
+    """
+    async def telebot_python(self):
+        return await telebot.TeleBot(get_environment_variables("TOKEN_API"))
+
+    def __await__(self):
+        return self.hello_world().__await__()
+    """
+    :description this function will be used schedule for hadith context 
+    :func start_schedule [self]
+    """
+    def start_schedule(self):
+        while True:
+          schedule.run_pending()
+          time.sleep(1)
+    """
+    :description this function will be used threading
+    :func start_threading [self]
+    """
+    def start_threading(self):
+        thread = threading.Thread(target=self.start_schedule())
+        thread.start()
+
+    """
+    :description style by context to send hadith context 
+    :func style_by_context [self]
+    """
+    @classmethod
+    async def style_by_context(cls) :
+        context = await Hadith_api.context_hadith_api()
+        text_message : str = f"{context}"
+        for get_user_id in Initializer_json("USERNAME_ID"):
+            token_bot.send_message(int ( get_user_id )  , "{" + text_message + "}" )
+            print(" Working 100%/100%")
+
 
 """
   :func parser_json 
@@ -106,12 +113,21 @@ def parser_json (keys : str  , user_id : str ) -> str :
            " Exception :: Error - For the solution ? -> https://stackoverflow.com/a/18460958/15710731 "
         )
 
+# @repeat(every(1).minutes)
+# def send_message():
+#     for get_ids in Initializer_json("USERNAME_ID"):
+#         token_bot.send_message(int(get_ids),"hellp")
+# def test():
+#     token_bot.send_message(758675511, "hello man")
+# schedule.every(2).seconds.do(test)
+
 """
 - Test 
 """
 @token_bot.message_handler(commands=["test"])
 def testing(message):
     token_bot.reply_to(message , message.chat.id )
+
 
 """
   Add owner in 'config.js'
@@ -143,6 +159,7 @@ def join_new_memeber(message):
     is_user : str = message.chat.id
     if int(is_user) not in Initializer_json("USERNAME_ID") or int(message.chat.id) not in Initializer_json("USERNAME_ID"):
        print(Initializer_json("USERNAME_ID"))
+       print(str(message.chat.id) not in ['505025149', '505025149', '505025149', '505025149', '505025149'])
        add_new_user = parser_json("add_user_id" , int(message.chat.id) )
        token_bot.reply_to(message , "[+] تمت اضافتك في قائمتنا [+]")
     else:
@@ -191,5 +208,16 @@ def options_to_help(message):
     else: 
        token_bot.reply_to(message , " /support  - للتواصل والدعم \n/join - للانضمام للبوت ")
 
+"""
+ main : starts to run a program
+"""
+async def main():
+   schedule_textmessage_telegramApi_method = await schedule_textmessage_telegramApi.style_by_context()
+   return schedule_textmessage_telegramApi_method
+
+loop = asyncio.get_event_loop()
+while True :
+    loop.run_until_complete(main())
+    time.sleep(1)
 
 token_bot.polling()
