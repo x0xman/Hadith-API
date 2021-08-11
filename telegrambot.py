@@ -158,8 +158,6 @@ def administrator(message):
 def join_new_memeber(message):
     is_user : str = message.chat.id
     if int(is_user) not in Initializer_json("USERNAME_ID") or int(message.chat.id) not in Initializer_json("USERNAME_ID"):
-       print(Initializer_json("USERNAME_ID"))
-       print(str(message.chat.id) not in ['505025149', '505025149', '505025149', '505025149', '505025149'])
        add_new_user = parser_json("add_user_id" , int(message.chat.id) )
        token_bot.reply_to(message , "[+] تمت اضافتك في قائمتنا [+]")
     else:
