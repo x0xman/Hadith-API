@@ -99,16 +99,15 @@ class schedule_textmessage_telegramApi:
 
 """
 def parser_json (keys : str  , user_id : str ) -> str :
-    try:
-        with open("config.json" , mode="r" , encoding="UTF-8" ) as json_file:
-            json_loads = json.load(json_file)
-            if keys == "add_user_id"    :      json_list : list = [];json_loads["USERNAME_ID"].append(user_id);json_list.append(json.dumps(json_loads));open("config.json" , mode="w").write(json_list[0]);return "[+] The user has been added 100% [+]"
-            if keys == "support"        :      return json_loads['support']
-            if keys == "add_vists"      :      json_loads["vists"] = int(json_loads["vists"]) + 1 ; open("config.json" , mode="w" ).write(json.dumps(json_loads))
-            if keys == "information"    :      info_vist : int = 0 ; info_users : int = 0 ; info_vist += json_loads['vists'] ; info_users += len(json_loads['USERNAME_ID']);text = f"""Users : {info_users} \nVists : {info_vist} \n """ ; return text
-            if keys == "add_owner"      :      json_list : list = [] ; json_loads["Owner"].append(user_id) ; json_list.append(json.dumps(json_loads));open("config.json" , mode="w").write(json_list[0]);return "[+] The user has been added 100% [+]"
-  
-    except json.decoder.JSONDecodeError:
+   try:
+    with open("config.json" , mode="r" , encoding="UTF-8" ) as json_file:
+         json_loads = json.load(json_file)
+         if keys == "add_user_id"    :      json_list : list = [];json_loads["USERNAME_ID"].append(user_id);json_list.append(json.dumps(json_loads));open("config.json" , mode="w").write(json_list[0]);return "[+] The user has been added 100% [+]"
+         if keys == "support"        :      return json_loads['support']
+         if keys == "add_vists"      :      json_loads["vists"] = int(json_loads["vists"]) + 1 ; open("config.json" , mode="w" ).write(json.dumps(json_loads))
+         if keys == "information"    :      info_vist : int = 0 ; info_users : int = 0 ; info_vist += json_loads['vists'] ; info_users += len(json_loads['USERNAME_ID']);text = f"""Users : {info_users} \nVists : {info_vist} \n """ ; return text
+         if keys == "add_owner"      :      json_list : list = [] ; json_loads["Owner"].append(user_id) ; json_list.append(json.dumps(json_loads));open("config.json" , mode="w").write(json_list[0]);return "[+] The user has been added 100% [+]"
+   except json.decoder.JSONDecodeError:
         raise JSONDecodeErrorException(
            " Exception :: Error - For the solution ? -> https://stackoverflow.com/a/18460958/15710731 "
         )
